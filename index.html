@@ -218,7 +218,30 @@
     display:flex; flex-direction:column; gap:10px;
     background:var(--surface-raised);
     transition:box-shadow .25s ease, border-color .25s ease;
+    overflow:hidden;
   }
+  /* Separate keyframes per face: the back face is statically rotateY(180deg)
+     so backface-visibility hides it at rest — an animation that only wrote
+     translateY() would overwrite that rotation and un-hide it. */
+  .flip-front{ animation:card-float-front 4.2s ease-in-out infinite; }
+  .flip-back{ animation:card-float-back 4.2s ease-in-out infinite; }
+  .flip-card:nth-child(2) .flip-face{ animation-delay:.3s; }
+  .flip-card:nth-child(3) .flip-face{ animation-delay:.6s; }
+  .flip-card:nth-child(4) .flip-face{ animation-delay:.9s; }
+  .flip-card:hover .flip-face, .flip-card.flipped .flip-face{ animation-play-state:paused; }
+  @keyframes card-float-front{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-7px); } }
+  @keyframes card-float-back{ 0%,100%{ transform:rotateY(180deg) translateY(0); } 50%{ transform:rotateY(180deg) translateY(-7px); } }
+  .flip-front::after{
+    content:''; position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(115deg, transparent 30%, color-mix(in srgb, var(--accent) 22%, transparent) 46%, transparent 62%);
+    background-size:260% 100%; background-position:160% 0;
+    animation:card-shine 4.2s ease-in-out infinite;
+  }
+  .flip-card:nth-child(2) .flip-front::after{ animation-delay:.3s; }
+  .flip-card:nth-child(3) .flip-front::after{ animation-delay:.6s; }
+  .flip-card:nth-child(4) .flip-front::after{ animation-delay:.9s; }
+  .flip-card:hover .flip-front::after, .flip-card.flipped .flip-front::after{ animation-play-state:paused; }
+  @keyframes card-shine{ 0%,70%,100%{ background-position:160% 0; } 85%{ background-position:-60% 0; } }
   .flip-card:hover .flip-front{ box-shadow:var(--shadow); border-color:var(--accent); }
   .flip-face h3{ font-size:19px; font-weight:800; max-width:84%; }
   .flip-face p{ margin:0; font-size:14.5px; color:var(--text-mid); }
@@ -271,6 +294,7 @@
   .service-num::after{ content:']'; }
 
   @media (prefers-reduced-motion: reduce){
+    .flip-face, .flip-front::after{ animation:none; }
     .flip-card-inner{ transition:none; }
   }
   @media (max-width:640px){
@@ -301,6 +325,18 @@
   .partner-slot{ opacity:0.82; }
 
   /* ---------- client logo marquee ---------- */
+  .marquee{
+    overflow:hidden;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 48px,#000 calc(100% - 48px),transparent);
+    mask-image:linear-gradient(90deg,transparent,#000 48px,#000 calc(100% - 48px),transparent);
+  }
+  .marquee-track{
+    display:flex; gap:18px; width:max-content;
+    animation:marquee-scroll 32s linear infinite;
+  }
+  .marquee:hover .marquee-track, .marquee:focus-within .marquee-track{ animation-play-state:paused; }
+  @keyframes marquee-scroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce){ .marquee-track{ animation:none; } }
   .logo-marquee{ margin-top:26px; }
   .logo-marquee .marquee-track{ animation-duration:26s; align-items:center; }
   .logo-slot{
