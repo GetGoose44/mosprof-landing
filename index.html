@@ -252,13 +252,15 @@
   .pfc-wrap:hover .pain-feature-card, .pfc-wrap:focus-visible .pain-feature-card{ animation-play-state:paused; }
   @keyframes pf-drift-1{ 0%,100%{ transform:rotate(-9deg) translateY(0); } 50%{ transform:rotate(-13deg) translateY(-8px); } }
   @keyframes pf-drift-2{ 0%,100%{ transform:rotate(7deg) translateY(0); } 50%{ transform:rotate(11deg) translateY(8px); } }
+  /* The rotated-card geometry only works in a tall vertical slot — rather
+     than squeeze it into a short horizontal strip on narrower screens
+     (where it reads as broken diagonal smears), just hide it there. */
   @media (max-width:980px){
-    .pain-bento{ grid-template-columns:1fr 1fr; grid-template-rows:repeat(2,1fr) auto; }
-    .pain-feature{ grid-column:1 / 3; grid-row:3; min-height:200px; }
+    .pain-bento{ grid-template-columns:1fr 1fr; }
+    .pain-feature{ display:none; }
   }
   @media (max-width:640px){
-    .pain-bento{ grid-template-columns:1fr; grid-template-rows:none; }
-    .pain-feature{ grid-column:1; grid-row:auto; min-height:180px; }
+    .pain-bento{ grid-template-columns:1fr; }
   }
   @media (prefers-reduced-motion: reduce){
     .pfc-1 .pain-feature-card, .pfc-2 .pain-feature-card{ animation:none; }
@@ -328,10 +330,16 @@
   }
   .flip-hint{
     margin-top:auto; padding-top:4px;
-    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-low);
+    font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--text-mid);
     display:flex; align-items:center; gap:6px;
   }
-  .flip-hint::after{ content:'⟲'; font-size:13px; }
+  .flip-hint::after{ content:'⟲'; font-size:15px; }
+  /* Touchscreens: hover never fires, so make the tap affordance clearer —
+     bigger, brighter, and a tap icon instead of a rotate-arrow. */
+  @media (pointer: coarse){
+    .flip-hint{ font-size:14.5px; color:var(--accent); font-weight:500; }
+    .flip-hint::after{ content:'👆'; font-size:15px; }
+  }
   .flip-card:hover .flip-hint{ color:var(--accent); }
   .flip-back-lede{
     margin:0; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase;
@@ -541,7 +549,7 @@
     </a>
     <nav class="topbar-nav">
       <a href="#trust">О компании</a>
-      <a href="services.html">Услуги</a>
+      <a href="https://www.serconsrus.ru/services/" target="_blank" rel="noopener">Услуги</a>
     </nav>
     <div class="topbar-right">
       <span class="phone">+7 (XXX) XXX-XX-XX</span>
