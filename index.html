@@ -1,5 +1,6 @@
 <meta charset="utf-8">
 <title>Московский профессионал</title>
+<link rel="icon" type="image/png" href="assets/logo-badge.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -79,6 +80,25 @@
   .lede{ font-size:17.5px; color:var(--text-mid); max-width:62ch; }
   .num{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; }
 
+  /* ---------- contact bar ---------- */
+  .contactbar{
+    background:var(--form-bg); color:var(--form-ink);
+    font-family:'JetBrains Mono',monospace; font-size:12.5px;
+  }
+  .contactbar-inner{
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    padding-block:8px; flex-wrap:wrap;
+  }
+  .contactbar-links{ display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
+  .contactbar a{ color:inherit; text-decoration:none; opacity:0.88; display:inline-flex; align-items:center; gap:6px; }
+  .contactbar a:hover{ opacity:1; color:var(--accent); }
+  .contactbar svg{ width:13px; height:13px; flex-shrink:0; }
+  .contactbar-hours{ opacity:0.7; white-space:nowrap; }
+  @media (max-width:760px){
+    .contactbar-inner{ justify-content:flex-start; overflow-x:auto; flex-wrap:nowrap; -webkit-overflow-scrolling:touch; }
+    .contactbar-hours{ display:none; }
+  }
+
   /* ---------- top bar ---------- */
   .topbar{
     position:sticky; top:0; z-index:40;
@@ -88,14 +108,20 @@
   }
   .topbar-inner{ display:flex; align-items:center; justify-content:space-between; gap:16px; padding-block:14px; }
   .brand{ display:flex; align-items:center; gap:12px; text-decoration:none; }
-  .mark{ display:flex; width:40px; height:40px; border-radius:11px; overflow:hidden; flex-shrink:0; box-shadow:var(--shadow); }
-  .mark span{ flex:1; display:flex; align-items:center; justify-content:center; font-family:'Unbounded',sans-serif; font-weight:800; font-size:16px; }
-  .mark .m{ background:var(--text-hi); color:var(--accent); }
-  .mark .p{ background:var(--accent); color:var(--text-hi); }
+  .mark{ display:flex; align-items:center; width:84px; flex-shrink:0; }
+  .mark img{ width:100%; height:auto; display:block; }
   .brand-word{ font-family:'Unbounded',sans-serif; font-weight:700; font-size:14.5px; color:var(--text-hi); line-height:1.25; letter-spacing:0.01em; }
   .brand-word small{ display:block; font-family:'JetBrains Mono',monospace; font-weight:500; font-size:10.5px; color:var(--text-low); letter-spacing:0.08em; text-transform:uppercase; margin-top:2px; }
   .topbar-right{ display:flex; align-items:center; gap:18px; }
   .phone{ font-family:'JetBrains Mono',monospace; font-size:14px; color:var(--text-mid); white-space:nowrap; }
+  @media (max-width:560px){
+    .topbar-right .phone{ display:none; }
+    .btn{ padding:9px 16px; font-size:13px; }
+  }
+  @media (max-width:520px){
+    .brand-word{ display:none; }
+    .mark{ width:56px; }
+  }
   .btn{
     font-family:'Inter',sans-serif; font-weight:600; font-size:14.5px;
     padding:11px 22px; border-radius:999px; border:1px solid transparent;
@@ -156,6 +182,51 @@
     padding:6px 12px; align-self:flex-start; margin-top:auto;
   }
 
+  /* ---------- services reveal + hover ---------- */
+  .service-card{ position:relative; transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+  .service-card:hover{ transform:translateY(-6px); box-shadow:var(--shadow); border-color:var(--accent); }
+  .service-num{
+    font-family:'JetBrains Mono',monospace; font-weight:700; font-size:13px;
+    color:var(--accent); opacity:0.75;
+  }
+  .reveal-grid .service-card{
+    opacity:0; transform:translateY(22px);
+    transition:opacity .55s ease, transform .55s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+  .reveal-grid.in-view .service-card{ opacity:1; transform:translateY(0); }
+  .reveal-grid.in-view .service-card:nth-child(1){ transition-delay:.05s; }
+  .reveal-grid.in-view .service-card:nth-child(2){ transition-delay:.16s; }
+  .reveal-grid.in-view .service-card:nth-child(3){ transition-delay:.27s; }
+  .reveal-grid.in-view .service-card:nth-child(4){ transition-delay:.38s; }
+  .services-more{ margin-top:22px; }
+  .services-more a{ font-weight:600; color:var(--accent); text-decoration:none; }
+  .services-more a:hover{ text-decoration:underline; }
+  @media (prefers-reduced-motion: reduce){
+    .reveal-grid .service-card{ opacity:1; transform:none; transition:none; }
+    .service-card:hover{ transform:none; }
+  }
+
+  /* ---------- pain marquee ---------- */
+  .marquee{
+    overflow:hidden;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 48px,#000 calc(100% - 48px),transparent);
+    mask-image:linear-gradient(90deg,transparent,#000 48px,#000 calc(100% - 48px),transparent);
+  }
+  .marquee-track{
+    display:flex; gap:18px; width:max-content;
+    animation:marquee-scroll 32s linear infinite;
+  }
+  .marquee:hover .marquee-track, .marquee:focus-within .marquee-track{ animation-play-state:paused; }
+  @keyframes marquee-scroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+  .pain-card{ width:280px; flex-shrink:0; }
+  .pain-icon{
+    width:40px; height:40px; border-radius:11px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--accent-pale); color:var(--accent);
+  }
+  .pain-icon svg{ width:20px; height:20px; }
+  @media (prefers-reduced-motion: reduce){ .marquee-track{ animation:none; } }
+
   .closer{
     margin-top:34px; padding:22px 26px; border-radius:16px;
     background:var(--text-hi); color:var(--bg);
@@ -166,21 +237,55 @@
   .closer::before{ content:'→'; font-size:22px; color:var(--accent); flex-shrink:0; }
 
   /* ---------- stats ---------- */
-  .stat-tile{ background:var(--surface-raised); border:1px solid var(--line); border-radius:18px; padding:26px 22px; }
-  .stat-num{ font-family:'JetBrains Mono',monospace; font-weight:700; font-size:clamp(26px,3vw,34px); color:var(--text-hi); }
+  .stat-tile{ padding-block:4px; }
+  .stat-icon{
+    display:flex; align-items:center; justify-content:center;
+    width:38px; height:38px; margin-bottom:14px; color:var(--accent);
+  }
+  .stat-icon svg{ width:26px; height:26px; }
+  .stat-num{ font-family:'JetBrains Mono',monospace; font-weight:700; font-size:clamp(26px,3vw,34px); color:var(--text-hi); font-variant-numeric:tabular-nums; }
   .stat-label{ font-size:13.5px; color:var(--text-mid); margin-top:8px; }
   .trust-line{ margin-top:28px; font-size:14.5px; color:var(--text-low); border-top:1px dashed var(--line); padding-top:22px; }
 
+  .partner-logos{ display:flex; flex-direction:column; gap:4px; font-size:clamp(17px,1.9vw,21px); }
+  .partner-slot{ opacity:0.82; }
+
+  /* ---------- client logo marquee ---------- */
+  .logo-marquee{ margin-top:26px; }
+  .logo-marquee .marquee-track{ animation-duration:26s; align-items:center; }
+  .logo-slot{
+    flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    height:52px; padding-inline:26px; border-radius:12px;
+    background:var(--surface-raised); border:1px dashed var(--line);
+    font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--text-low);
+    white-space:nowrap;
+  }
+
   /* ---------- why-us ---------- */
-  .why-item{ display:flex; gap:16px; align-items:flex-start; }
+  .why-item{ display:flex; gap:16px; align-items:flex-start; position:relative; }
+  .why-num{
+    position:absolute; left:-6px; top:-20px;
+    font-family:'Unbounded',sans-serif; font-weight:800; font-size:40px;
+    color:var(--accent); opacity:0.14;
+    transition:opacity .3s ease, transform .3s ease;
+    pointer-events:none; user-select:none;
+  }
+  .why-item:hover .why-num{ opacity:0.3; transform:translateY(-4px); }
   .check{
     width:30px; height:30px; border-radius:9px; flex-shrink:0;
     background:var(--accent-pale); display:flex; align-items:center; justify-content:center;
+    position:relative; z-index:1;
+    transition:transform .3s cubic-bezier(.34,1.56,.64,1), background .3s ease;
   }
+  .why-item:hover .check{ transform:scale(1.15); background:var(--accent); }
+  .why-item:hover .check path{ stroke:var(--accent-ink); }
   .check svg{ width:15px; height:15px; }
-  .check path{ stroke:var(--accent); }
-  .why-item h3{ font-size:16px; font-weight:700; margin-bottom:5px; }
-  .why-item p{ margin:0; font-size:14px; color:var(--text-mid); }
+  .check path{ stroke:var(--accent); transition:stroke .3s ease; }
+  .why-item h3{ font-size:16px; font-weight:700; margin-bottom:5px; position:relative; z-index:1; }
+  .why-item p{ margin:0; font-size:14px; color:var(--text-mid); position:relative; z-index:1; }
+  @media (prefers-reduced-motion: reduce){
+    .why-num, .check{ transition:none; }
+  }
 
   /* ---------- who-for ---------- */
   .role-card{ }
@@ -250,10 +355,30 @@
   .copyright{ margin-top:40px; padding-top:22px; border-top:1px dashed var(--line); font-size:12.5px; color:var(--text-low); font-family:'JetBrains Mono',monospace; }
 </style>
 
+<div class="contactbar">
+  <div class="wrap contactbar-inner">
+    <div class="contactbar-links">
+      <a href="tel:+7XXXXXXXXXX">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        +7 (XXX) XXX-XX-XX
+      </a>
+      <a href="mailto:info@mosprof.ru">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="m22 6-10 7L2 6"/></svg>
+        info@mosprof.ru
+      </a>
+      <a href="https://t.me/mosprof" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+        @mosprof
+      </a>
+    </div>
+    <span class="contactbar-hours">Пн–Пт, 9:00–18:00</span>
+  </div>
+</div>
+
 <header class="topbar">
   <div class="wrap topbar-inner">
     <a href="#top" class="brand">
-      <span class="mark"><span class="m">М</span><span class="p">П</span></span>
+      <span class="mark"><img src="assets/logo-icon.png" alt="Московский профессионал"></span>
       <span class="brand-word">Московский профессионал<small>Обучение · Аттестация · Консалтинг</small></span>
     </a>
     <div class="topbar-right">
@@ -290,22 +415,28 @@
         <h2>Рутина, которая съедает недели</h2>
         <p class="lede">Если вы главный инженер, специалист по охране труда или руководитель кадров в промышленной компании — вы знаете эту рутину:</p>
       </div>
-      <div class="grid grid-4">
-        <div class="card">
-          <h3>Горящие сроки</h3>
-          <p>Проверка через неделю, а половина сотрудников не обучена. Нужно срочно, но без ущерба качеству.</p>
-        </div>
-        <div class="card">
-          <h3>Горы бумаг</h3>
-          <p>СУОТ, программы обучения, годовые отчёты по экологии, ОПО. Всё это нужно готовить вам.</p>
-        </div>
-        <div class="card">
-          <h3>Согласование бюджетов</h3>
-          <p>Собрать пять коммерческих предложений, обосновать каждую копейку, ждать одобрения неделями.</p>
-        </div>
-        <div class="card">
-          <h3>Страх проверок</h3>
-          <p>Одна просроченная аттестация — и штраф. А то и приостановка деятельности.</p>
+      <div class="marquee" id="painMarquee">
+        <div class="marquee-track">
+          <div class="card pain-card">
+            <span class="pain-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span>
+            <h3>Горящие сроки</h3>
+            <p>Проверка через неделю, а половина сотрудников не обучена. Нужно срочно, но без ущерба качеству.</p>
+          </div>
+          <div class="card pain-card">
+            <span class="pain-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg></span>
+            <h3>Горы бумаг</h3>
+            <p>СУОТ, программы обучения, годовые отчёты по экологии, ОПО. Всё это нужно готовить вам.</p>
+          </div>
+          <div class="card pain-card">
+            <span class="pain-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></span>
+            <h3>Согласование бюджетов</h3>
+            <p>Собрать пять коммерческих предложений, обосновать каждую копейку, ждать одобрения неделями.</p>
+          </div>
+          <div class="card pain-card">
+            <span class="pain-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/></svg></span>
+            <h3>Страх проверок</h3>
+            <p>Одна просроченная аттестация — и штраф. А то и приостановка деятельности.</p>
+          </div>
         </div>
       </div>
       <div class="closer">Мы берём это на себя. Вы занимаетесь стратегией, а не бумажками.</div>
@@ -320,29 +451,34 @@
         <h2>Четыре направления одного окна</h2>
         <p class="lede">Закрывают практически все потребности промышленного предприятия в обучении и безопасности.</p>
       </div>
-      <div class="grid grid-4">
-        <div class="card">
+      <div class="grid grid-4 reveal-grid" id="servicesGrid">
+        <div class="card service-card">
+          <span class="service-num">01</span>
           <h3>Обучение рабочих</h3>
           <p>Дистанционно или с выездом преподавателя на ваше предприятие. По окончании — удостоверения установленного образца. Группы от 3 до 100+ человек.</p>
           <span class="card-tag">от 2 000 ₽ за удостоверение</span>
         </div>
-        <div class="card">
+        <div class="card service-card">
+          <span class="service-num">02</span>
           <h3>Нестандартные программы</h3>
           <p>Разрабатываем под вашу задачу: обучение по 1С, работа на авто- и электротележках с отработкой на вашем оборудовании, повышение квалификации.</p>
           <span class="card-tag">от 100 000 ₽ за программу</span>
         </div>
-        <div class="card">
+        <div class="card service-card">
+          <span class="service-num">03</span>
           <h3>Консалтинг и документация</h3>
           <p>СУОТ, программы по электро- и пожарной безопасности, годовые отчёты по экологии и ОПО. Помощь с проверками и лицензиями Ростехнадзора.</p>
           <span class="card-tag">от 20 000 ₽ за пакет</span>
         </div>
-        <div class="card">
+        <div class="card service-card">
+          <span class="service-num">04</span>
           <h3>Аттестация в Ростехнадзоре</h3>
           <p>Организуем аттестацию руководителей. Формат: пришёл, сел, ушёл — экзамен сдан. Электробезопасность и промышленная безопасность.</p>
           <span class="card-tag">от 45 000 ₽</span>
         </div>
       </div>
       <div class="closer">Единое окно: один контакт закрывает 70% ваших задач по обучению и безопасности.</div>
+      <p class="services-more"><a href="services.html">Полный список направлений и услуг →</a></p>
     </div>
   </section>
 
@@ -354,17 +490,48 @@
         <h2>Цифры вместо обещаний</h2>
       </div>
       <div class="grid grid-4">
-        <div class="stat-tile"><div class="stat-num">с 2021</div><div class="stat-label">на рынке промышленной безопасности</div></div>
-        <div class="stat-tile"><div class="stat-num">Ростех, Росатом</div><div class="stat-label">работаем с предприятиями контура</div></div>
-        <div class="stat-tile"><div class="stat-num num">3&ndash;100+</div><div class="stat-label">человек обрабатываем в одной заявке</div></div>
-        <div class="stat-tile"><div class="stat-num num">70%</div><div class="stat-label">задач ЛПР закрываем</div></div>
+        <div class="stat-tile">
+          <span class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>
+          <div class="stat-num"><span class="count-up" data-to="2021">2021</span></div>
+          <div class="stat-label">на рынке промышленной безопасности</div>
+        </div>
+        <div class="stat-tile">
+          <span class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></span>
+          <!-- TODO(Настя): сюда реальные логотипы Ростех/Росатом, когда пришлёшь файлы — заменить .partner-slot на <img> -->
+          <div class="stat-num partner-logos">
+            <span class="partner-slot">Ростех</span>
+            <span class="partner-slot">Росатом</span>
+          </div>
+          <div class="stat-label">работаем с предприятиями контура</div>
+        </div>
+        <div class="stat-tile">
+          <span class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg></span>
+          <div class="stat-num num">3&ndash;100+</div>
+          <div class="stat-label">человек обрабатываем в одной заявке</div>
+        </div>
+        <div class="stat-tile">
+          <span class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 1 4 4c0 1.5-.8 2.6-1.5 3.3L18 11v2h-3v7H9v-7H6v-2l3.5-1.7C8.8 8.6 8 7.5 8 6a4 4 0 0 1 4-4Z"/><path d="M4 11h1M19 11h1"/></svg></span>
+          <div class="stat-num num">70%</div>
+          <div class="stat-label">задач ЛПР закрываем</div>
+        </div>
       </div>
       <p class="trust-line">Среди наших клиентов — промышленные предприятия, строительные холдинги, логистические компании, предприятия оборонного комплекса.</p>
+
+      <!-- TODO(Настя): карусель готова, нужны файлы логотипов клиентов — заменить .logo-slot на <img> -->
+      <div class="marquee logo-marquee">
+        <div class="marquee-track" id="logoMarqueeTrack">
+          <span class="logo-slot">Промышленность</span>
+          <span class="logo-slot">Строительство</span>
+          <span class="logo-slot">Логистика</span>
+          <span class="logo-slot">Нефтегаз</span>
+          <span class="logo-slot">ОПК</span>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- BLOCK 4 — WHY US -->
-  <section class="section-alt">
+  <section id="why" class="section-alt">
     <div class="wrap">
       <div class="section-head">
         <p class="eyebrow">Почему мы</p>
@@ -372,26 +539,32 @@
       </div>
       <div class="grid grid-2" style="row-gap:30px;">
         <div class="why-item">
+          <span class="why-num">01</span>
           <span class="check"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           <div><h3>Человек работает с человеком</h3><p>Никаких отделов продаж и переключений. Вы общаетесь с экспертом, который ведёт ваш проект от заявки до результата.</p></div>
         </div>
         <div class="why-item">
+          <span class="why-num">02</span>
           <span class="check"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           <div><h3>Единое окно</h3><p>Обучение, аттестация, документация, лицензии — всё в одном месте. Один контакт вместо десяти подрядчиков.</p></div>
         </div>
         <div class="why-item">
+          <span class="why-num">03</span>
           <span class="check"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           <div><h3>Скорость</h3><p>Дистанционное обучение запускаем за 1–2 дня. Срочные аттестации — в приоритетном режиме.</p></div>
         </div>
         <div class="why-item">
+          <span class="why-num">04</span>
           <span class="check"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           <div><h3>Честные цены</h3><p>Стоимость зависит от объёма и сложности, а не от «прайса с потолка». Прозрачная смета до начала работ.</p></div>
         </div>
         <div class="why-item">
+          <span class="why-num">05</span>
           <span class="check"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           <div><h3>Гарантия результата</h3><p>Аттестация в Ростехнадзоре — с гарантией сдачи. Документация — с гарантией прохождения проверки.</p></div>
         </div>
         <div class="why-item">
+          <span class="why-num">06</span>
           <span class="check"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           <div><h3>Опыт в промышленности</h3><p>Понимаем специфику заводов, строек и оборонных предприятий. Говорим на вашем языке.</p></div>
         </div>
@@ -490,7 +663,7 @@
     <div class="foot-grid">
       <div class="foot-brand">
         <div class="brand">
-          <span class="mark"><span class="m">М</span><span class="p">П</span></span>
+          <span class="mark"><img src="assets/logo-icon.png" alt="Московский профессионал"></span>
           <span class="brand-word">Московский профессионал</span>
         </div>
         <p>Учебный центр «Московский профессионал». Обучение, аттестация и консалтинг для промышленных предприятий.</p>
@@ -527,5 +700,53 @@
       form.classList.remove('hide');
       panel.classList.remove('show');
     });
+  })();
+
+  // Бегущие дорожки: дублируем содержимое трека один раз, чтобы
+  // translateX(-50%) зацикливалась без видимого шва.
+  (function(){
+    document.querySelectorAll('.marquee-track').forEach(function(track){
+      track.innerHTML += track.innerHTML;
+    });
+  })();
+
+  // Карточки услуг проявляются при входе секции в зону видимости.
+  (function(){
+    var grid = document.getElementById('servicesGrid');
+    if (!grid || !('IntersectionObserver' in window)) { if (grid) grid.classList.add('in-view'); return; }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) { grid.classList.add('in-view'); io.disconnect(); }
+      });
+    }, { threshold: 0.25 });
+    io.observe(grid);
+  })();
+
+  // Счётчик года в блоке статистики — считает от текущего года до 2021 при появлении.
+  (function(){
+    var els = document.querySelectorAll('.count-up');
+    if (!els.length) return;
+    function run(el){
+      var to = parseInt(el.dataset.to, 10);
+      var from = to - 6;
+      var start = null;
+      var duration = 900;
+      function step(ts){
+        if (start === null) start = ts;
+        var p = Math.min((ts - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(from + (to - from) * eased);
+        if (p < 1) requestAnimationFrame(step);
+        else el.textContent = to;
+      }
+      requestAnimationFrame(step);
+    }
+    if (!('IntersectionObserver' in window)) { els.forEach(run); return; }
+    var io = new IntersectionObserver(function(entries, obs){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) { run(entry.target); obs.unobserve(entry.target); }
+      });
+    }, { threshold: 0.6 });
+    els.forEach(function(el){ io.observe(el); });
   })();
 </script>
