@@ -158,15 +158,16 @@
   .hero-text{ max-width:620px; }
   .hero h1{ font-size:clamp(40px,5.6vw,68px); line-height:1.02; font-weight:900; letter-spacing:-0.01em; }
   .hero-sub{ font-family:'Unbounded',sans-serif; font-weight:500; font-size:clamp(17px,2vw,21px); color:var(--accent); margin:20px 0 34px; }
-  .hero-ctas{ display:flex; flex-wrap:wrap; gap:12px; }
-  .hero-cta-zone{ display:flex; justify-content:center; align-items:center; }
+  .hero-cta-zone{ display:flex; flex-direction:column; gap:12px; align-items:stretch; }
   .hero-primary-cta{
-    font-size:18px; padding:22px 34px; text-align:center;
+    font-size:18px; padding:22px 34px; text-align:center; justify-content:center;
     box-shadow:var(--shadow);
   }
+  .hero-cta-sub{ justify-content:flex-start; gap:10px; padding:14px 20px; }
+  .hero-cta-sub svg{ width:18px; height:18px; flex-shrink:0; }
   @media (max-width:860px){
     .hero-grid{ grid-template-columns:1fr; }
-    .hero-cta-zone{ justify-content:flex-start; margin-top:4px; }
+    .hero-cta-zone{ margin-top:4px; }
     .hero-primary-cta{ font-size:15.5px; padding:13px 24px; }
   }
 
@@ -234,7 +235,7 @@
     position:absolute; width:62%; height:58%; cursor:pointer;
     transition:transform .3s cubic-bezier(.34,1.56,.64,1);
   }
-  .pfc-wrap:hover, .pfc-wrap:focus-visible{ z-index:5; transform:scale(1.08) translateY(-10px); }
+  .pfc-wrap:hover, .pfc-wrap:focus-visible, .pfc-wrap.pfc-active{ z-index:5; transform:scale(1.08) translateY(-10px); }
   .pfc-1{ top:16%; left:14%; }
   .pfc-2{ bottom:14%; right:12%; z-index:1; }
   .pain-feature-card{
@@ -246,7 +247,7 @@
     display:flex; flex-direction:column; justify-content:center; gap:6px;
     padding:18px 20px; text-align:center;
   }
-  .pfc-wrap:hover .pain-feature-card, .pfc-wrap:focus-visible .pain-feature-card{
+  .pfc-wrap:hover .pain-feature-card, .pfc-wrap:focus-visible .pain-feature-card, .pfc-wrap.pfc-active .pain-feature-card{
     opacity:1;
   }
   .pfc-label{
@@ -256,7 +257,7 @@
   .pfc-text{ font-size:14px; font-weight:600; color:var(--text-hi); line-height:1.4; }
   .pfc-1 .pain-feature-card{ transform:rotate(-9deg); animation:pf-drift-1 7s ease-in-out infinite; }
   .pfc-2 .pain-feature-card{ transform:rotate(7deg); animation:pf-drift-2 7s ease-in-out infinite; animation-delay:.4s; }
-  .pfc-wrap:hover .pain-feature-card, .pfc-wrap:focus-visible .pain-feature-card{ animation-play-state:paused; }
+  .pfc-wrap:hover .pain-feature-card, .pfc-wrap:focus-visible .pain-feature-card, .pfc-wrap.pfc-active .pain-feature-card{ animation-play-state:paused; }
   @keyframes pf-drift-1{ 0%,100%{ transform:rotate(-9deg) translateY(0); } 50%{ transform:rotate(-13deg) translateY(-8px); } }
   @keyframes pf-drift-2{ 0%,100%{ transform:rotate(7deg) translateY(0); } 50%{ transform:rotate(11deg) translateY(8px); } }
   .pf-test-badge{
@@ -349,10 +350,20 @@
   }
   .flip-hint::after{ content:'⟲'; font-size:15px; }
   /* Touchscreens: hover never fires, so make the tap affordance clearer —
-     bigger, brighter, and a tap icon instead of a rotate-arrow. */
+     bigger, brighter text, and a pulsing transparent ring instead of the
+     rotate-arrow (reads as "tap here" without a literal finger icon). */
   @media (pointer: coarse){
     .flip-hint{ font-size:14.5px; color:var(--accent); font-weight:500; }
-    .flip-hint::after{ content:'👆'; font-size:15px; }
+    .flip-hint::after{
+      content:''; width:14px; height:14px; border-radius:50%;
+      border:1.5px solid var(--accent); background:transparent;
+      animation:tap-pulse 1.6s ease-out infinite;
+    }
+    @keyframes tap-pulse{
+      0%{ transform:scale(0.55); opacity:0.9; }
+      70%{ transform:scale(1.5); opacity:0; }
+      100%{ transform:scale(1.5); opacity:0; }
+    }
   }
   .flip-card:hover .flip-hint{ color:var(--accent); }
   .flip-back-lede{
@@ -387,7 +398,7 @@
   .service-num::after{ content:']'; }
 
   @media (prefers-reduced-motion: reduce){
-    .flip-face, .flip-front::after{ animation:none; }
+    .flip-face, .flip-front::after, .flip-hint::after{ animation:none; }
     .flip-card-inner{ transition:none; }
   }
   @media (max-width:640px){
@@ -583,13 +594,17 @@
           <p class="eyebrow">Учебный центр промышленной безопасности</p>
           <h1>Московский<br>профессионал</h1>
           <p class="hero-sub">Под каждую задачу — свой ключ</p>
-          <div class="hero-ctas">
-            <a href="#services" class="btn btn-outline">Разрешительные документы</a>
-            <a href="#trust" class="btn btn-outline">Знакомство с компанией</a>
-          </div>
         </div>
         <div class="hero-cta-zone">
           <a href="#form" class="btn btn-solid hero-primary-cta">У меня есть запрос</a>
+          <a href="#services" class="btn btn-outline hero-cta-sub">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>
+            Разрешительные документы
+          </a>
+          <a href="#trust" class="btn btn-outline hero-cta-sub">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            Знакомство с компанией
+          </a>
         </div>
       </div>
     </div>
@@ -1034,6 +1049,20 @@
       card.addEventListener('click', toggle);
       card.addEventListener('keydown', function(e){
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+      });
+    });
+  })();
+
+  // Клик/тап выносит декоративную карточку вперёд — на тач-экранах :hover
+  // не срабатывает, так что без этого фича "вперёд по наведению" там
+  // просто не видна.
+  (function(){
+    var wraps = document.querySelectorAll('.pfc-wrap');
+    wraps.forEach(function(wrap){
+      wrap.addEventListener('click', function(){
+        var wasActive = wrap.classList.contains('pfc-active');
+        wraps.forEach(function(w){ w.classList.remove('pfc-active'); });
+        if (!wasActive) wrap.classList.add('pfc-active');
       });
     });
   })();
