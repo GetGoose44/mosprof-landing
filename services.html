@@ -76,8 +76,17 @@
   .mark img{ width:100%; height:auto; display:block; }
   .brand-word{ font-family:'Unbounded',sans-serif; font-weight:700; font-size:14.5px; color:var(--text-hi); line-height:1.25; letter-spacing:0.01em; }
   .brand-word small{ display:block; font-family:'JetBrains Mono',monospace; font-weight:500; font-size:10.5px; color:var(--text-low); letter-spacing:0.08em; text-transform:uppercase; margin-top:2px; }
+  .topbar-nav{ display:flex; align-items:center; gap:28px; margin-inline:auto; padding-left:40px; }
+  .topbar-nav a{
+    font-size:14.5px; font-weight:500; color:var(--text-mid); text-decoration:none;
+    transition:color .15s ease; white-space:nowrap;
+  }
+  .topbar-nav a:hover{ color:var(--accent); }
   .topbar-right{ display:flex; align-items:center; gap:18px; }
   .phone{ font-family:'JetBrains Mono',monospace; font-size:14px; color:var(--text-mid); white-space:nowrap; }
+  @media (max-width:860px){
+    .topbar-nav{ display:none; }
+  }
   @media (max-width:560px){
     .topbar-right .phone{ display:none; }
     .btn{ padding:9px 16px; font-size:13px; }

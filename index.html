@@ -112,8 +112,17 @@
   .mark img{ width:100%; height:auto; display:block; }
   .brand-word{ font-family:'Unbounded',sans-serif; font-weight:700; font-size:14.5px; color:var(--text-hi); line-height:1.25; letter-spacing:0.01em; }
   .brand-word small{ display:block; font-family:'JetBrains Mono',monospace; font-weight:500; font-size:10.5px; color:var(--text-low); letter-spacing:0.08em; text-transform:uppercase; margin-top:2px; }
+  .topbar-nav{ display:flex; align-items:center; gap:28px; margin-inline:auto; padding-left:40px; }
+  .topbar-nav a{
+    font-size:14.5px; font-weight:500; color:var(--text-mid); text-decoration:none;
+    transition:color .15s ease; white-space:nowrap;
+  }
+  .topbar-nav a:hover{ color:var(--accent); }
   .topbar-right{ display:flex; align-items:center; gap:18px; }
   .phone{ font-family:'JetBrains Mono',monospace; font-size:14px; color:var(--text-mid); white-space:nowrap; }
+  @media (max-width:860px){
+    .topbar-nav{ display:none; }
+  }
   @media (max-width:560px){
     .topbar-right .phone{ display:none; }
     .btn{ padding:9px 16px; font-size:13px; }
@@ -219,14 +228,28 @@
     grid-column:3; grid-row:1 / 3;
     position:relative; min-height:100%;
   }
+  /* Outer wrapper handles hover (z-index + lift, via transition) so it
+     never fights the inner element's idle rotate/drift keyframes. */
+  .pfc-wrap{
+    position:absolute; width:62%; height:58%; cursor:pointer;
+    transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+  }
+  .pfc-wrap:hover, .pfc-wrap:focus-visible{ z-index:5; transform:scale(1.08) translateY(-10px); }
+  .pfc-1{ top:16%; left:14%; }
+  .pfc-2{ bottom:14%; right:12%; z-index:1; }
   .pain-feature-card{
-    position:absolute; width:62%; height:58%; border-radius:16px;
+    position:absolute; inset:0; border-radius:16px;
     background:linear-gradient(155deg, var(--accent-pale), transparent 70%);
     border:1.5px solid var(--accent);
     opacity:0.55;
+    transition:opacity .3s ease, border-color .3s ease;
   }
-  .pf-1{ top:16%; left:14%; transform:rotate(-9deg); animation:pf-drift-1 7s ease-in-out infinite; }
-  .pf-2{ bottom:14%; right:12%; transform:rotate(7deg); animation:pf-drift-2 7s ease-in-out infinite; animation-delay:.4s; }
+  .pfc-wrap:hover .pain-feature-card, .pfc-wrap:focus-visible .pain-feature-card{
+    opacity:0.9;
+  }
+  .pfc-1 .pain-feature-card{ transform:rotate(-9deg); animation:pf-drift-1 7s ease-in-out infinite; }
+  .pfc-2 .pain-feature-card{ transform:rotate(7deg); animation:pf-drift-2 7s ease-in-out infinite; animation-delay:.4s; }
+  .pfc-wrap:hover .pain-feature-card, .pfc-wrap:focus-visible .pain-feature-card{ animation-play-state:paused; }
   @keyframes pf-drift-1{ 0%,100%{ transform:rotate(-9deg) translateY(0); } 50%{ transform:rotate(-13deg) translateY(-8px); } }
   @keyframes pf-drift-2{ 0%,100%{ transform:rotate(7deg) translateY(0); } 50%{ transform:rotate(11deg) translateY(8px); } }
   @media (max-width:980px){
@@ -238,7 +261,8 @@
     .pain-feature{ grid-column:1; grid-row:auto; min-height:180px; }
   }
   @media (prefers-reduced-motion: reduce){
-    .pf-1, .pf-2{ animation:none; }
+    .pfc-1 .pain-feature-card, .pfc-2 .pain-feature-card{ animation:none; }
+    .pfc-wrap{ transition:none; }
   }
   .services-more a{ font-weight:600; color:var(--accent); text-decoration:none; }
   .services-more a:hover{ text-decoration:underline; }
@@ -515,6 +539,10 @@
       <span class="mark"><img src="assets/logo-icon.png" alt="Московский профессионал"></span>
       <span class="brand-word">Московский профессионал<small>Обучение · Аттестация · Консалтинг</small></span>
     </a>
+    <nav class="topbar-nav">
+      <a href="#trust">О компании</a>
+      <a href="services.html">Услуги</a>
+    </nav>
     <div class="topbar-right">
       <span class="phone">+7 (XXX) XXX-XX-XX</span>
       <a href="#form" class="btn btn-solid">Оставить заявку</a>
@@ -613,8 +641,8 @@
           </div>
         </div>
         <div class="pain-feature" aria-hidden="true">
-          <span class="pain-feature-card pf-1"></span>
-          <span class="pain-feature-card pf-2"></span>
+          <span class="pfc-wrap pfc-1"><span class="pain-feature-card"></span></span>
+          <span class="pfc-wrap pfc-2"><span class="pain-feature-card"></span></span>
         </div>
       </div>
       <div class="closer">Мы берём это на себя. Вы занимаетесь стратегией, а не бумажками.</div>
