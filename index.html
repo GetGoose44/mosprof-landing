@@ -239,28 +239,42 @@
   .pfc-2{ bottom:14%; right:12%; z-index:1; }
   .pain-feature-card{
     position:absolute; inset:0; border-radius:16px;
-    background:linear-gradient(155deg, var(--accent-pale), transparent 70%);
+    background:linear-gradient(155deg, var(--surface-raised), var(--accent-pale) 130%);
     border:1.5px solid var(--accent);
-    opacity:0.55;
+    opacity:0.82;
     transition:opacity .3s ease, border-color .3s ease;
+    display:flex; flex-direction:column; justify-content:center; gap:6px;
+    padding:18px 20px; text-align:center;
   }
   .pfc-wrap:hover .pain-feature-card, .pfc-wrap:focus-visible .pain-feature-card{
-    opacity:0.9;
+    opacity:1;
   }
+  .pfc-label{
+    font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase;
+    letter-spacing:0.06em; color:var(--accent);
+  }
+  .pfc-text{ font-size:14px; font-weight:600; color:var(--text-hi); line-height:1.4; }
   .pfc-1 .pain-feature-card{ transform:rotate(-9deg); animation:pf-drift-1 7s ease-in-out infinite; }
   .pfc-2 .pain-feature-card{ transform:rotate(7deg); animation:pf-drift-2 7s ease-in-out infinite; animation-delay:.4s; }
   .pfc-wrap:hover .pain-feature-card, .pfc-wrap:focus-visible .pain-feature-card{ animation-play-state:paused; }
   @keyframes pf-drift-1{ 0%,100%{ transform:rotate(-9deg) translateY(0); } 50%{ transform:rotate(-13deg) translateY(-8px); } }
   @keyframes pf-drift-2{ 0%,100%{ transform:rotate(7deg) translateY(0); } 50%{ transform:rotate(11deg) translateY(8px); } }
-  /* The rotated-card geometry only works in a tall vertical slot — rather
-     than squeeze it into a short horizontal strip on narrower screens
-     (where it reads as broken diagonal smears), just hide it there. */
+  .pf-test-badge{
+    position:absolute; top:-14px; left:50%; transform:translateX(-50%); z-index:6;
+    font-family:'JetBrains Mono',monospace; font-size:10.5px; white-space:nowrap;
+    color:var(--warn); background:var(--surface); border:1px dashed var(--warn);
+    border-radius:999px; padding:4px 12px;
+  }
+  /* The rotated-card geometry needs a tall vertical slot to read — below
+     980px give it its own full-width row with real height instead of
+     squeezing it into a short strip (where it read as broken smears). */
   @media (max-width:980px){
-    .pain-bento{ grid-template-columns:1fr 1fr; }
-    .pain-feature{ display:none; }
+    .pain-bento{ grid-template-columns:1fr 1fr; grid-template-rows:repeat(2,1fr) auto; }
+    .pain-feature{ grid-column:1 / 3; grid-row:3; min-height:320px; }
   }
   @media (max-width:640px){
-    .pain-bento{ grid-template-columns:1fr; }
+    .pain-bento{ grid-template-columns:1fr; grid-template-rows:none; }
+    .pain-feature{ grid-column:1; grid-row:auto; min-height:300px; }
   }
   @media (prefers-reduced-motion: reduce){
     .pfc-1 .pain-feature-card, .pfc-2 .pain-feature-card{ animation:none; }
@@ -648,9 +662,20 @@
             </div>
           </div>
         </div>
-        <div class="pain-feature" aria-hidden="true">
-          <span class="pfc-wrap pfc-1"><span class="pain-feature-card"></span></span>
-          <span class="pfc-wrap pfc-2"><span class="pain-feature-card"></span></span>
+        <div class="pain-feature">
+          <span class="pf-test-badge">Тест — заменим реальным контентом</span>
+          <span class="pfc-wrap pfc-1">
+            <span class="pain-feature-card">
+              <span class="pfc-label">Кейс клиента</span>
+              <span class="pfc-text">Завод «Прогресс»: обучили 120 человек за 2 недели</span>
+            </span>
+          </span>
+          <span class="pfc-wrap pfc-2">
+            <span class="pain-feature-card">
+              <span class="pfc-label">Отзыв</span>
+              <span class="pfc-text">«Уложились в срок, ни одной претензии от инспекции»</span>
+            </span>
+          </span>
         </div>
       </div>
       <div class="closer">Мы берём это на себя. Вы занимаетесь стратегией, а не бумажками.</div>
