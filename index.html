@@ -182,50 +182,100 @@
     padding:6px 12px; align-self:flex-start; margin-top:auto;
   }
 
-  /* ---------- services reveal + hover ---------- */
-  .service-card{ position:relative; transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
-  .service-card:hover{ transform:translateY(-6px); box-shadow:var(--shadow); border-color:var(--accent); }
-  .service-num{
-    font-family:'JetBrains Mono',monospace; font-weight:700; font-size:13px;
-    color:var(--accent); opacity:0.75;
-  }
-  .reveal-grid .service-card{
+  /* ---------- reveal-on-scroll (shared) ---------- */
+  .reveal-grid > *{
     opacity:0; transform:translateY(22px);
-    transition:opacity .55s ease, transform .55s ease, box-shadow .25s ease, border-color .25s ease;
+    transition:opacity .55s ease, transform .55s ease;
   }
-  .reveal-grid.in-view .service-card{ opacity:1; transform:translateY(0); }
-  .reveal-grid.in-view .service-card:nth-child(1){ transition-delay:.05s; }
-  .reveal-grid.in-view .service-card:nth-child(2){ transition-delay:.16s; }
-  .reveal-grid.in-view .service-card:nth-child(3){ transition-delay:.27s; }
-  .reveal-grid.in-view .service-card:nth-child(4){ transition-delay:.38s; }
+  .reveal-grid.in-view > *{ opacity:1; transform:translateY(0); }
+  .reveal-grid.in-view > *:nth-child(1){ transition-delay:.05s; }
+  .reveal-grid.in-view > *:nth-child(2){ transition-delay:.16s; }
+  .reveal-grid.in-view > *:nth-child(3){ transition-delay:.27s; }
+  .reveal-grid.in-view > *:nth-child(4){ transition-delay:.38s; }
   .services-more{ margin-top:22px; }
   .services-more a{ font-weight:600; color:var(--accent); text-decoration:none; }
   .services-more a:hover{ text-decoration:underline; }
   @media (prefers-reduced-motion: reduce){
-    .reveal-grid .service-card{ opacity:1; transform:none; transition:none; }
-    .service-card:hover{ transform:none; }
+    .reveal-grid > *{ opacity:1; transform:none; transition:none; }
   }
 
-  /* ---------- pain marquee ---------- */
-  .marquee{
-    overflow:hidden;
-    -webkit-mask-image:linear-gradient(90deg,transparent,#000 48px,#000 calc(100% - 48px),transparent);
-    mask-image:linear-gradient(90deg,transparent,#000 48px,#000 calc(100% - 48px),transparent);
+  /* ---------- flip cards (pain + services): click/tap to flip, like a payment card ---------- */
+  .flip-card{
+    perspective:1400px; cursor:pointer; border-radius:18px;
+    outline-offset:4px;
   }
-  .marquee-track{
-    display:flex; gap:18px; width:max-content;
-    animation:marquee-scroll 32s linear infinite;
+  .flip-card-inner{
+    position:relative; width:100%; height:100%;
+    transform-style:preserve-3d;
+    transition:transform .65s cubic-bezier(.4,.15,.2,1);
   }
-  .marquee:hover .marquee-track, .marquee:focus-within .marquee-track{ animation-play-state:paused; }
-  @keyframes marquee-scroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
-  .pain-card{ width:280px; flex-shrink:0; }
+  .flip-card.flipped .flip-card-inner{ transform:rotateY(180deg); }
+  .flip-face{
+    position:absolute; inset:0;
+    -webkit-backface-visibility:hidden; backface-visibility:hidden;
+    border-radius:18px; border:1px solid var(--line);
+    padding:26px 24px;
+    display:flex; flex-direction:column; gap:10px;
+    background:var(--surface-raised);
+    transition:box-shadow .25s ease, border-color .25s ease;
+  }
+  .flip-card:hover .flip-front{ box-shadow:var(--shadow); border-color:var(--accent); }
+  .flip-face h3{ font-size:19px; font-weight:800; max-width:84%; }
+  .flip-face p{ margin:0; font-size:14.5px; color:var(--text-mid); }
+  .flip-face .card-tag{
+    font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.04em;
+    color:var(--accent); background:var(--accent-pale); border-radius:999px;
+    padding:6px 12px; align-self:flex-start; margin-top:auto;
+  }
+  .flip-back{
+    transform:rotateY(180deg);
+    background:var(--form-bg); color:var(--form-ink); border-color:transparent;
+    justify-content:center;
+  }
+  .flip-hint{
+    margin-top:auto; padding-top:4px;
+    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-low);
+    display:flex; align-items:center; gap:6px;
+  }
+  .flip-hint::after{ content:'⟲'; font-size:13px; }
+  .flip-card:hover .flip-hint{ color:var(--accent); }
+  .flip-back-lede{
+    margin:0; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase;
+    letter-spacing:0.08em; color:var(--accent);
+  }
+  .flip-back-text{ margin:0; font-size:15px; color:var(--form-ink); line-height:1.55; }
+  .flip-back .svc-items{ display:flex; flex-direction:column; gap:7px; list-style:none; margin:0; padding:0; }
+  .flip-back .svc-items li{ font-size:13.5px; color:var(--form-ink); opacity:0.92; display:flex; gap:8px; align-items:flex-start; }
+  .flip-back .svc-items li::before{ content:''; width:5px; height:5px; border-radius:50%; background:var(--accent); margin-top:7px; flex-shrink:0; }
+  .flip-back .svc-items-sm li{ font-size:12.5px; }
+  .flip-back-link{ margin-top:auto; font-size:13.5px; font-weight:700; color:var(--accent); text-decoration:none; }
+  .flip-back-link:hover{ text-decoration:underline; }
+
+  /* pain cards: number top-right, icon top-left, bold headline (reference-styled) */
+  .pain-card .flip-card-inner, .pain-card .flip-face{ height:248px; }
   .pain-icon{
-    width:40px; height:40px; border-radius:11px; flex-shrink:0;
+    width:42px; height:42px; border-radius:50%; flex-shrink:0;
     display:flex; align-items:center; justify-content:center;
-    background:var(--accent-pale); color:var(--accent);
+    border:1.6px solid var(--accent); color:var(--accent);
   }
   .pain-icon svg{ width:20px; height:20px; }
-  @media (prefers-reduced-motion: reduce){ .marquee-track{ animation:none; } }
+
+  /* service cards: same front language, numbered [NN], taller back for sub-service lists */
+  .service-card .flip-card-inner, .service-card .flip-face{ height:320px; }
+  .service-num{
+    position:absolute; top:22px; right:22px;
+    font-family:'JetBrains Mono',monospace; font-weight:700; font-size:13px;
+    color:var(--accent); opacity:0.8;
+  }
+  .service-num::before{ content:'['; }
+  .service-num::after{ content:']'; }
+
+  @media (prefers-reduced-motion: reduce){
+    .flip-card-inner{ transition:none; }
+  }
+  @media (max-width:640px){
+    .pain-card .flip-card-inner, .pain-card .flip-face{ height:272px; }
+  }
 
   .closer{
     margin-top:34px; padding:22px 26px; border-radius:16px;
@@ -415,27 +465,61 @@
         <h2>Рутина, которая съедает недели</h2>
         <p class="lede">Если вы главный инженер, специалист по охране труда или руководитель кадров в промышленной компании — вы знаете эту рутину:</p>
       </div>
-      <div class="marquee" id="painMarquee">
-        <div class="marquee-track">
-          <div class="card pain-card">
-            <span class="pain-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span>
-            <h3>Горящие сроки</h3>
-            <p>Проверка через неделю, а половина сотрудников не обучена. Нужно срочно, но без ущерба качеству.</p>
+      <div class="grid grid-4 reveal-grid" id="painGrid">
+        <div class="flip-card pain-card" tabindex="0" role="button" aria-pressed="false" id="painDemoCard">
+          <div class="flip-card-inner">
+            <div class="flip-face flip-front">
+              <span class="pain-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span>
+              <h3>Горящие сроки</h3>
+              <p>Проверка через неделю, а половина сотрудников не обучена. Нужно срочно, но без ущерба качеству.</p>
+              <span class="flip-hint">Нажмите, чтобы увидеть решение</span>
+            </div>
+            <div class="flip-face flip-back">
+              <p class="flip-back-lede">Как мы решаем</p>
+              <p class="flip-back-text">Дистанционное обучение запускаем за 1–2 дня. Срочные аттестации — в приоритетном режиме.</p>
+            </div>
           </div>
-          <div class="card pain-card">
-            <span class="pain-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg></span>
-            <h3>Горы бумаг</h3>
-            <p>СУОТ, программы обучения, годовые отчёты по экологии, ОПО. Всё это нужно готовить вам.</p>
+        </div>
+        <div class="flip-card pain-card" tabindex="0" role="button" aria-pressed="false">
+          <div class="flip-card-inner">
+            <div class="flip-face flip-front">
+              <span class="pain-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg></span>
+              <h3>Горы бумаг</h3>
+              <p>СУОТ, программы обучения, годовые отчёты по экологии, ОПО. Всё это нужно готовить вам.</p>
+              <span class="flip-hint">Нажмите, чтобы увидеть решение</span>
+            </div>
+            <div class="flip-face flip-back">
+              <p class="flip-back-lede">Как мы решаем</p>
+              <p class="flip-back-text">Берём документацию на себя: СУОТ, программы безопасности, отчёты по экологии и ОПО.</p>
+            </div>
           </div>
-          <div class="card pain-card">
-            <span class="pain-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></span>
-            <h3>Согласование бюджетов</h3>
-            <p>Собрать пять коммерческих предложений, обосновать каждую копейку, ждать одобрения неделями.</p>
+        </div>
+        <div class="flip-card pain-card" tabindex="0" role="button" aria-pressed="false">
+          <div class="flip-card-inner">
+            <div class="flip-face flip-front">
+              <span class="pain-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></span>
+              <h3>Согласование бюджетов</h3>
+              <p>Собрать пять коммерческих предложений, обосновать каждую копейку, ждать одобрения неделями.</p>
+              <span class="flip-hint">Нажмите, чтобы увидеть решение</span>
+            </div>
+            <div class="flip-face flip-back">
+              <p class="flip-back-lede">Как мы решаем</p>
+              <p class="flip-back-text">Прозрачная смета до начала работ. Один контакт вместо пяти предложений.</p>
+            </div>
           </div>
-          <div class="card pain-card">
-            <span class="pain-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/></svg></span>
-            <h3>Страх проверок</h3>
-            <p>Одна просроченная аттестация — и штраф. А то и приостановка деятельности.</p>
+        </div>
+        <div class="flip-card pain-card" tabindex="0" role="button" aria-pressed="false">
+          <div class="flip-card-inner">
+            <div class="flip-face flip-front">
+              <span class="pain-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/></svg></span>
+              <h3>Страх проверок</h3>
+              <p>Одна просроченная аттестация — и штраф. А то и приостановка деятельности.</p>
+              <span class="flip-hint">Нажмите, чтобы увидеть решение</span>
+            </div>
+            <div class="flip-face flip-back">
+              <p class="flip-back-lede">Как мы решаем</p>
+              <p class="flip-back-text">Аттестация и документация — с гарантией прохождения проверки.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -452,29 +536,92 @@
         <p class="lede">Закрывают практически все потребности промышленного предприятия в обучении и безопасности.</p>
       </div>
       <div class="grid grid-4 reveal-grid" id="servicesGrid">
-        <div class="card service-card">
-          <span class="service-num">01</span>
-          <h3>Обучение рабочих</h3>
-          <p>Дистанционно или с выездом преподавателя на ваше предприятие. По окончании — удостоверения установленного образца. Группы от 3 до 100+ человек.</p>
-          <span class="card-tag">от 2 000 ₽ за удостоверение</span>
+        <div class="flip-card service-card" tabindex="0" role="button" aria-pressed="false">
+          <div class="flip-card-inner">
+            <div class="flip-face flip-front">
+              <span class="service-num">01</span>
+              <h3>Обучение рабочих</h3>
+              <p>Дистанционно или с выездом преподавателя на ваше предприятие. По окончании — удостоверения установленного образца. Группы от 3 до 100+ человек.</p>
+              <span class="card-tag">от 2 000 ₽ за удостоверение</span>
+              <span class="flip-hint">Нажмите, чтобы увидеть состав</span>
+            </div>
+            <div class="flip-face flip-back">
+              <p class="flip-back-lede">Входит в направление:</p>
+              <ul class="svc-items">
+                <li>Дистанционное обучение</li>
+                <li>Выезд преподавателя на предприятие</li>
+                <li>Группы от 3 до 100+ человек</li>
+                <li>Удостоверения установленного образца</li>
+              </ul>
+              <a href="services.html" class="flip-back-link">Все услуги направления →</a>
+            </div>
+          </div>
         </div>
-        <div class="card service-card">
-          <span class="service-num">02</span>
-          <h3>Нестандартные программы</h3>
-          <p>Разрабатываем под вашу задачу: обучение по 1С, работа на авто- и электротележках с отработкой на вашем оборудовании, повышение квалификации.</p>
-          <span class="card-tag">от 100 000 ₽ за программу</span>
+        <div class="flip-card service-card" tabindex="0" role="button" aria-pressed="false">
+          <div class="flip-card-inner">
+            <div class="flip-face flip-front">
+              <span class="service-num">02</span>
+              <h3>Нестандартные программы</h3>
+              <p>Разрабатываем под вашу задачу: обучение по 1С, работа на авто- и электротележках с отработкой на вашем оборудовании, повышение квалификации.</p>
+              <span class="card-tag">от 100 000 ₽ за программу</span>
+              <span class="flip-hint">Нажмите, чтобы увидеть состав</span>
+            </div>
+            <div class="flip-face flip-back">
+              <p class="flip-back-lede">Входит в направление:</p>
+              <ul class="svc-items">
+                <li>Обучение по 1С</li>
+                <li>Работа на автопогрузчиках</li>
+                <li>Работа на электротележках</li>
+                <li>Отработка на оборудовании заказчика</li>
+                <li>Повышение квалификации</li>
+              </ul>
+              <a href="services.html" class="flip-back-link">Все услуги направления →</a>
+            </div>
+          </div>
         </div>
-        <div class="card service-card">
-          <span class="service-num">03</span>
-          <h3>Консалтинг и документация</h3>
-          <p>СУОТ, программы по электро- и пожарной безопасности, годовые отчёты по экологии и ОПО. Помощь с проверками и лицензиями Ростехнадзора.</p>
-          <span class="card-tag">от 20 000 ₽ за пакет</span>
+        <div class="flip-card service-card" tabindex="0" role="button" aria-pressed="false">
+          <div class="flip-card-inner">
+            <div class="flip-face flip-front">
+              <span class="service-num">03</span>
+              <h3>Консалтинг и документация</h3>
+              <p>СУОТ, программы по электро- и пожарной безопасности, годовые отчёты по экологии и ОПО. Помощь с проверками и лицензиями Ростехнадзора.</p>
+              <span class="card-tag">от 20 000 ₽ за пакет</span>
+              <span class="flip-hint">Нажмите, чтобы увидеть состав</span>
+            </div>
+            <div class="flip-face flip-back">
+              <p class="flip-back-lede">Входит в направление:</p>
+              <ul class="svc-items svc-items-sm">
+                <li>Разработка СУОТ</li>
+                <li>Электробезопасность</li>
+                <li>Пожарная безопасность</li>
+                <li>Отчёты по экологии</li>
+                <li>Отчётность по ОПО</li>
+                <li>Сопровождение проверок</li>
+                <li>Лицензии Ростехнадзора</li>
+              </ul>
+              <a href="services.html" class="flip-back-link">Все услуги направления →</a>
+            </div>
+          </div>
         </div>
-        <div class="card service-card">
-          <span class="service-num">04</span>
-          <h3>Аттестация в Ростехнадзоре</h3>
-          <p>Организуем аттестацию руководителей. Формат: пришёл, сел, ушёл — экзамен сдан. Электробезопасность и промышленная безопасность.</p>
-          <span class="card-tag">от 45 000 ₽</span>
+        <div class="flip-card service-card" tabindex="0" role="button" aria-pressed="false">
+          <div class="flip-card-inner">
+            <div class="flip-face flip-front">
+              <span class="service-num">04</span>
+              <h3>Аттестация в Ростехнадзоре</h3>
+              <p>Организуем аттестацию руководителей. Формат: пришёл, сел, ушёл — экзамен сдан. Электробезопасность и промышленная безопасность.</p>
+              <span class="card-tag">от 45 000 ₽</span>
+              <span class="flip-hint">Нажмите, чтобы увидеть состав</span>
+            </div>
+            <div class="flip-face flip-back">
+              <p class="flip-back-lede">Входит в направление:</p>
+              <ul class="svc-items">
+                <li>Аттестация руководителей</li>
+                <li>Электробезопасность</li>
+                <li>Промышленная безопасность</li>
+              </ul>
+              <a href="services.html" class="flip-back-link">Все услуги направления →</a>
+            </div>
+          </div>
         </div>
       </div>
       <div class="closer">Единое окно: один контакт закрывает 70% ваших задач по обучению и безопасности.</div>
@@ -710,16 +857,58 @@
     });
   })();
 
-  // Карточки услуг проявляются при входе секции в зону видимости.
+  // Карточки боли/услуг проявляются при входе своей сетки в зону видимости.
   (function(){
-    var grid = document.getElementById('servicesGrid');
-    if (!grid || !('IntersectionObserver' in window)) { if (grid) grid.classList.add('in-view'); return; }
+    var grids = [document.getElementById('painGrid'), document.getElementById('servicesGrid')].filter(Boolean);
+    if (!('IntersectionObserver' in window)) { grids.forEach(function(g){ g.classList.add('in-view'); }); return; }
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
-        if (entry.isIntersecting) { grid.classList.add('in-view'); io.disconnect(); }
+        if (entry.isIntersecting) { entry.target.classList.add('in-view'); io.unobserve(entry.target); }
       });
     }, { threshold: 0.25 });
-    io.observe(grid);
+    grids.forEach(function(g){ io.observe(g); });
+  })();
+
+  // Клик/Enter/Space переворачивает карточку (как банковская карта — see getcard.one).
+  (function(){
+    document.querySelectorAll('.flip-card').forEach(function(card){
+      function toggle(){
+        var flipped = card.classList.toggle('flipped');
+        card.setAttribute('aria-pressed', flipped ? 'true' : 'false');
+      }
+      card.addEventListener('click', toggle);
+      card.addEventListener('keydown', function(e){
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+      });
+    });
+  })();
+
+  // Одна карточка боли сама переворачивается туда-обратно один раз, когда
+  // появляется в зоне видимости — подсказывает, что карточки кликабельны.
+  (function(){
+    var demo = document.getElementById('painDemoCard');
+    if (!demo) return;
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+    function playDemo(){
+      setTimeout(function(){
+        demo.classList.add('flipped');
+        demo.setAttribute('aria-pressed', 'true');
+        setTimeout(function(){
+          if (!demo.matches(':hover')) {
+            demo.classList.remove('flipped');
+            demo.setAttribute('aria-pressed', 'false');
+          }
+        }, 1600);
+      }, 700);
+    }
+    if (!('IntersectionObserver' in window)) { playDemo(); return; }
+    var io = new IntersectionObserver(function(entries, obs){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) { playDemo(); obs.disconnect(); }
+      });
+    }, { threshold: 0.6 });
+    io.observe(demo);
   })();
 
   // Счётчик года в блоке статистики — считает от текущего года до 2021 при появлении.
